@@ -162,7 +162,10 @@ class MachCommands(CommandBase):
         self_contained_tests = [
             "background_hang_monitor",
             "base",
+            "compositing",
+            "compositing_traits",
             "constellation",
+            "devtools",
             "fonts",
             "hyper_serde",
             "layout_2020",
@@ -176,7 +179,6 @@ class MachCommands(CommandBase):
             "servo_config",
             "servoshell",
             "stylo_config",
-            "webrender_traits",
         ]
         if not packages:
             packages = set(os.listdir(path.join(self.context.topdir, "tests", "unit"))) - set(['.DS_Store'])

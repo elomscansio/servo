@@ -1010,7 +1010,7 @@ pub async fn http_redirect_fetch(
     // Step 8: Increase request’s redirect count by 1.
     request.redirect_count += 1;
 
-    // Step 7
+    // Step 9
     let same_origin = match request.origin {
         Origin::Origin(ref origin) => *origin == location_url.origin(),
         Origin::Client => panic!(
@@ -1255,10 +1255,9 @@ async fn http_network_or_cache_fetch(
     // Step 8.15: If httpRequest’s header list does not contain `User-Agent`, then user agents
     // should append (`User-Agent`, default `User-Agent` value) to httpRequest’s header list.
     if !http_request.headers.contains_key(header::USER_AGENT) {
-        let user_agent = context.user_agent.clone().into_owned();
         http_request
             .headers
-            .typed_insert::<UserAgent>(user_agent.parse().unwrap());
+            .typed_insert::<UserAgent>(context.user_agent.parse().unwrap());
     }
 
     // Steps 8.16 to 8.18
