@@ -132,16 +132,16 @@ impl Serialize for HighResolutionStamp {
 static DEFAULT_TIMELINE_DATA_PULL_TIMEOUT: u64 = 200; // ms
 
 impl TimelineActor {
-    pub fn new(
-        name: String,
+    pub fn register(
+        registry: &ActorRegistry,
         pipeline_id: PipelineId,
         script_sender: GenericSender<DevtoolScriptControlMsg>,
-        registry: Arc<Mutex<ActorRegistry>>,
-    ) -> TimelineActor {
+    ) -> String {
+        let name = registry.new_name::<Self>();
         let marker_types = vec![TimelineMarkerType::Reflow, TimelineMarkerType::DOMEvent];
 
-        TimelineActor {
-            name,
+        let actor = Self {
+            name: name.clone(),
             pipeline_id,
             marker_types,
             script_sender,
@@ -150,7 +150,9 @@ impl TimelineActor {
             memory_actor: AtomicRefCell::new(None),
             start_stamp: CrossProcessInstant::now(),
             registry,
-        }
+        };
+        registry.register::<Self>(actor);
+        name
     }
 
     fn pull_timeline_data(
